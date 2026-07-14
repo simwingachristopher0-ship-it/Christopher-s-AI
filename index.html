@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christopher's AI - Zambia AI</title>
+<style>
+  body { margin:0; font-family: Arial; background: linear-gradient(orange, green); }
+.header { background:#0a7a3d; color:white; padding:12px; text-align:center; }
+.header h1 { margin:0; font-size:22px; }
+.header p { margin:0; font-size:12px; }
+.chat { height:65vh; overflow-y:auto; background:white; padding:10px; border-radius:10px; margin:10px; }
+.msg { margin:8px 0; padding:8px 12px; border-radius:12px; max-width:80%; }
+.user { background:#e6f0ff; margin-left:auto; text-align:right; }
+.ai { background:#f1f1f1; margin-right:auto; }
+.input-area { display:flex; padding:10px; gap:8px; }
+  input { flex:1; padding:10px; border-radius:20px; border:1px solid #ccc; }
+  button { background:#0a7a3d; color:white; border:none; padding:10px 18px; border-radius:20px; }
+.settings { padding:10px; color:white; font-size:12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🇿🇲 ZAMBIA AI</h1>
+  <p>Christopher's AI | Powered by Groq</p>
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="input-area">
+  <input id="userInput" placeholder="Ask Christopher's AI...">
+  <button onclick="sendMsg()">Send</button>
+</div>
+
+<div class="settings">
+  <label><input type="checkbox" id="voice"> Voice Reply</label>
+  <label><input type="checkbox" id="music"> Music Mode</label>
+  <button onclick="connectTV()">Connect to TV</button>
+</div>
+
+<script>
+let chatHistory = JSON.parse(localStorage.getItem("zambiaAI")) || [];
+
+function renderChat(){
+  let chatDiv = document.getElementById("chat");
+  chatDiv.innerHTML = "";
+  chatHistory.forEach(m => {
+    chatDiv.innerHTML += `<div class="msg ${m.role}">${m.text}</div>`;
+  });
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+async function sendMsg(){
+  let input = document.getElementById("userInput");
+  let text = input.value;
+  if(!text) return;
+
+  chatHistory.push({role:"user", text});
+  renderChat();
+  input.value = "";
+
+  let reply = await askAI(text);
+
+  chatHistory.push({role:"ai", text:reply});
+  localStorage.setItem("zambiaAI", JSON.stringify(chatHistory));
+  renderChat();
+
+  if(document.getElementById("voice").checked){
+    let speech = new SpeechSynthesisUtterance(reply);
+    speech.lang = 'en-ZA';
+    speechSynthesis.speak(speech);
+  }
+}
+
+async function askAI(prompt){
+  let apiKey = localStorage.getItem("groq_key"); // <-- KEY COMES FROM HERE
+  if(!apiKey) return "Please add your Groq key first. Open console and run: localStorage.setItem('groq_key','your_key_here')";
+
+  try {
+    let res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + apiKey // <-- USES YOUR SAVED KEY
+      },
+      body:JSON.stringify({
+        model:"llama-3.1-70b-versatile",
+        messages:[{role:"user", content:prompt}]
+      })
+    });
+    let data = await res.json();
+    return data.choices[0].message.content;
+  } catch(e){
+    return "Sorry, I couldn't get a response. Please try again.";
+  }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
+}
+
+function connectTV(){
+  alert("Open this same website on your Smart TV browser");
+}
+
+document.getElementById("music").onchange = function(){
+  if(this.checked) alert("Music Mode: Type 'play music' to search YouTube");
+}
+
+renderChat();
+</script>
+</body>
+</html>
