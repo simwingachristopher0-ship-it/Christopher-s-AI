@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christopher's AI Pro - FIXED</title>
+<title>Christopher's AI Pro - FAST</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
   body { background: #0a0a0f; color: white; min-height: 100vh; padding: 10px; }
   body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 100%); z-index: -1; }
 .container { max-width: 900px; margin: 0 auto; background: rgba(15,15,30,0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,255,0.2); border-radius: 20px; padding: 20px; box-shadow: 0 0 30px rgba(0,255,255,0.1); }
-  h1 { text-align: center; margin-bottom: 10px; font-size: 26px; background: linear-gradient(90deg, #00f5ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-.tab { padding: 14px; background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1)); border: 1px solid rgba(0,255,255,0.3); border-radius: 15px; color: #00f5ff; cursor: pointer; font-weight: 700; transition: all 0.3s; }
+  h1 { text-align: center; margin-bottom: 10px; font-size: 24px; background: linear-gradient(90deg, #00f5ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.tab { padding: 14px; background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1)); border: 1px solid rgba(0,255,255,0.3); border-radius: 15px; color: #00f5ff; cursor: pointer; font-weight: 700; transition: all 0.3s; font-size: 12px; }
 .tab:hover { transform: translateY(-3px); box-shadow: 0 0 25px rgba(0,255,255,0.5); }
 .tab.active { background: linear-gradient(135deg, #00f5ff, #ff00ff); color: #0a0a0f; box-shadow: 0 0 30px rgba(0,255,255,0.8); }
-.action-btn { padding: 12px 20px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00f5ff, #ff00ff); color: #0a0a0f; font-weight: 700; cursor: pointer; margin: 5px; transition: all 0.3s; }
+.action-btn { padding: 12px 18px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00f5ff, #ff00ff); color: #0a0a0f; font-weight: 700; cursor: pointer; margin: 5px; transition: all 0.3s; font-size: 14px; }
 .action-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,0,255,0.6); }
 .action-btn.danger { background: linear-gradient(135deg, #ff0044, #ff6600); }
 .chat-box { height: 350px; overflow-y: auto; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,255,255,0.2); border-radius: 15px; padding: 15px; margin-bottom: 10px; }
-.msg { margin: 10px 0; padding: 12px; border-radius: 12px; animation: fadeIn 0.3s; }
+.msg { margin: 10px 0; padding: 12px; border-radius: 12px; animation: fadeIn 0.3s; word-wrap: break-word; }
  @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
 .user { background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2)); text-align: right; border-left: 3px solid #00f5ff; }
 .ai { background: rgba(255,255,255,0.05); border-left: 3px solid #ff00ff; }
-  input, textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(0,255,255,0.3); background: rgba(0,0,0,0.4); color: white; margin: 8px 0; outline: none; }
+  input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(0,255,255,0.3); background: rgba(0,0,0,0.4); color: white; margin: 8px 0; outline: none; }
   input:focus { box-shadow: 0 0 15px rgba(0,255,255,0.5); }
   img { max-width: 100%; border-radius: 15px; margin-top: 10px; border: 2px solid rgba(0,255,255,0.3); }
 .saved-item { background: rgba(0,255,255,0.1); padding: 10px; border-radius: 10px; margin: 5px 0; border-left: 3px solid #00f5ff; }
@@ -32,16 +32,16 @@
 .loading { color: #00f5ff; animation: pulse 1s infinite; }
  @keyframes pulse { 0%,100% {opacity: 1;} 50% {opacity: 0.5;} }
 .error { color: #ff0044; }
+.status { text-align:center; font-size:11px; color:#00ff88; margin-bottom:10px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🤖 CHRISTOPHER'S AI PRO</h1>
-  <p style="text-align:center; font-size:12px; color:#00f5ff; margin-bottom:15px;">MEMORY: ON | All data saved to your device</p>
+  <p class="status">⚡ FAST MODE: TinyLlama | MEMORY: ON</p>
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('chat')">💬 NEURAL CHAT</button>
-    <button class="tab" onclick="showTab('talk')">🔊 VOICE AI</button>
     <button class="tab" onclick="showTab('create')">🎨 AI GENERATOR</button>
     <button class="tab" onclick="showTab('docs')">📁 MY DOCUMENTS</button>
     <button class="tab" onclick="showTab('zambia')">🇿🇲 ZAMBIA HUB</button>
@@ -52,27 +52,20 @@
     <div class="chat-box" id="chatBox"></div>
     <input type="text" id="userInput" placeholder="Ask Christopher's AI anything..." onkeypress="if(event.key==='Enter') sendChat()">
     <button class="action-btn" onclick="sendChat()">🚀 SEND</button>
-    <button class="action-btn danger" onclick="clearChat()">🗑️ CLEAR CHAT</button>
-  </div>
-
-  <!-- TALK -->
-  <div id="talk" class="section">
-    <p style="color:#00f5ff;">Click and speak. AI will respond with voice.</p>
-    <button class="action-btn" onclick="startVoice()">🎤 ACTIVATE VOICE</button>
-    <div id="voiceText" style="margin-top:15px;"></div>
+    <button class="action-btn danger" onclick="clearChat()">🗑️ CLEAR</button>
   </div>
 
   <!-- CREATE IMAGE -->
   <div id="create" class="section">
-    <input type="text" id="imagePrompt" placeholder="Describe your image: e.g. Futuristic farm in Zambia">
-    <button class="action-btn" onclick="generateImage()">✨ GENERATE & SAVE</button>
+    <input type="text" id="imagePrompt" placeholder="Describe image: e.g. maize farm in Zambia">
+    <button class="action-btn" onclick="generateImage()">✨ GENERATE</button>
     <div id="imageResult"></div>
   </div>
 
   <!-- DOCUMENTS -->
   <div id="docs" class="section">
-    <h3 style="color:#00f5ff;">📁 SAVED DOCUMENTS & IMAGES</h3>
-    <button class="action-btn" onclick="saveCurrentChat()">💾 SAVE THIS CHAT</button>
+    <h3 style="color:#00f5ff;">📁 SAVED DOCUMENTS</h3>
+    <button class="action-btn" onclick="saveCurrentChat()">💾 SAVE CHAT</button>
     <button class="action-btn danger" onclick="clearAllDocs()">🗑️ DELETE ALL</button>
     <div id="docsList" style="margin-top:15px;"></div>
   </div>
@@ -80,9 +73,9 @@
   <!-- ZAMBIA TOOLS -->
   <div id="zambia" class="section">
     <h3 style="color:#00f5ff; margin-bottom:10px;">🇿🇲 ZAMBIA INTELLIGENCE HUB</h3>
-    <button class="action-btn" onclick="zambiaTool('business')">💼 BUSINESS IDEAS</button>
-    <button class="action-btn" onclick="zambiaTool('farming')">🌽 FARMING AI</button>
-    <button class="action-btn" onclick="zambiaTool('market')">📈 MARKET PRICES</button>
+    <button class="action-btn" onclick="zambiaTool('business')">💼 BUSINESS</button>
+    <button class="action-btn" onclick="zambiaTool('farming')">🌽 FARMING</button>
+    <button class="action-btn" onclick="zambiaTool('market')">📈 PRICES</button>
     <div id="zambiaResult" class="chat-box"></div>
   </div>
 
@@ -90,6 +83,7 @@
 
 <script>
 const TOKEN = "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";
+const API_URL = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0";
 let chatHistory = JSON.parse(localStorage.getItem('ai_chat')) || [];
 let documents = JSON.parse(localStorage.getItem('ai_docs')) || [];
 
@@ -118,7 +112,7 @@ function saveChat() {
   localStorage.setItem('ai_chat', JSON.stringify(chatHistory));
 }
 
-// FIXED CHAT FUNCTION
+// WORKING CHAT WITH TIMEOUT
 async function sendChat() {
   const input = document.getElementById('userInput');
   const msg = input.value;
@@ -128,34 +122,32 @@ async function sendChat() {
   input.value = '';
   
   const loadingId = Date.now();
-  addMsg(`<span class="loading" id="load${loadingId}">AI is thinking...</span>`, 'ai');
+  addMsg(`<span class="loading" id="load${loadingId}">AI is thinking... 5-10 sec</span>`, 'ai');
+  
+  // 15 second timeout
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
   
   try {
-    const res = await fetch("https://api-inference.huggingface.co/models/Qwen/Qwen2-7B-Instruct", {
+    const res = await fetch(API_URL, {
       method: "POST", 
       headers: { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        inputs: `<|im_start|>user\n${msg}<|im_end|>\n<|im_start|>assistant\n`,
-        parameters: {max_new_tokens: 500}
-      })
+      body: JSON.stringify({inputs: `User: ${msg}\nAI:`, parameters: {max_new_tokens: 200}}),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
     
     const data = await res.json();
-    console.log(data);
-    
-    let reply = "Sorry, I couldn't respond.";
-    if(data[0] && data[0].generated_text) {
-      reply = data[0].generated_text.split("<|im_start|>assistant\n")[1] || data[0].generated_text;
-    } else if(data.error) {
-      reply = `<span class="error">Error: ${data.error}</span>`;
-    }
+    let reply = data[0]?.generated_text || "No response";
+    reply = reply.replace(`User: ${msg}\nAI:`, '').trim();
     
     document.getElementById(`load${loadingId}`).parentElement.innerHTML = `<b>AI:</b> ${reply}`;
     chatHistory.push({who:'ai', text:reply});
     saveChat();
     
   } catch(e) {
-    document.getElementById(`load${loadingId}`).parentElement.innerHTML = `<b class="error">AI:</b> Connection error. Check internet.`;
+    clearTimeout(timeout);
+    document.getElementById(`load${loadingId}`).parentElement.innerHTML = `<b class="error">AI:</b> Too slow. Check internet and try again.`;
   }
 }
 
@@ -166,7 +158,7 @@ function addMsg(text, who) {
 }
 
 function clearChat() {
-  if(confirm("Clear current chat?")) {
+  if(confirm("Clear chat?")) {
     chatHistory = [];
     saveChat();
     loadChat();
@@ -181,7 +173,7 @@ function saveCurrentChat() {
   documents.push({type:'chat', title:title, content:content, date:new Date().toLocaleString()});
   localStorage.setItem('ai_docs', JSON.stringify(documents));
   loadDocs();
-  alert("Chat saved!");
+  alert("Saved!");
 }
 
 function loadDocs() {
@@ -195,7 +187,7 @@ function loadDocs() {
     list.innerHTML += `
       <div class="saved-item">
         <b>${doc.title}</b> <small style="color:#888;">${doc.date}</small><br>
-        ${doc.type==='image' ? `<img src="${doc.content}">` : `<p>${doc.content.substring(0,100)}...</p>`}
+        <p>${doc.content.substring(0,100)}...</p>
         <button class="action-btn" onclick="downloadDoc(${i})">⬇️ DOWNLOAD</button>
         <button class="action-btn danger" onclick="deleteDoc(${i})">DELETE</button>
       </div>
@@ -218,21 +210,17 @@ function deleteDoc(i) {
 }
 
 function clearAllDocs() {
-  if(confirm("Delete ALL saved documents?")) {
+  if(confirm("Delete ALL?")) {
     documents = [];
     localStorage.setItem('ai_docs', JSON.stringify(documents));
     loadDocs();
   }
 }
 
-// OTHER FUNCTIONS
-function startVoice() {
-  alert("Voice feature: Hold and speak. Will reply with voice.");
-}
-
+// IMAGE
 async function generateImage() {
   const prompt = document.getElementById('imagePrompt').value;
-  document.getElementById('imageResult').innerHTML = '<p class="loading">Generating...</p>';
+  document.getElementById('imageResult').innerHTML = '<p class="loading">Generating 20-30 sec...</p>';
   const res = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0", {
     method: "POST", headers: { "Authorization": "Bearer " + TOKEN },
     body: JSON.stringify({inputs: prompt})
@@ -242,18 +230,19 @@ async function generateImage() {
   document.getElementById('imageResult').innerHTML = `<img src="${imgUrl}">`;
 }
 
+// ZAMBIA
 function zambiaTool(type) {
   const prompts = {
-    business: "Give me 5 profitable business ideas for Lusaka, Zambia with under 2000 ZMW capital",
-    farming: "Expert farming tips for maize, tomatoes and vegetables during Zambia rainy season",
-    market: "Current typical market prices for mealie meal, tomatoes, and chicken in Zambia"
+    business: "5 business ideas in Lusaka Zambia under 2000 ZMW",
+    farming: "Farming tips for maize in Zambia rainy season",
+    market: "Market prices for mealie meal and tomatoes in Zambia"
   };
-  document.getElementById('zambiaResult').innerHTML = '<p class="loading">Accessing Zambia Database...</p>';
-  fetch("https://api-inference.huggingface.co/models/Qwen/Qwen2-7B-Instruct", {
+  document.getElementById('zambiaResult').innerHTML = '<p class="loading">Loading...</p>';
+  fetch(API_URL, {
     method: "POST", headers: { "Authorization": "Bearer " + TOKEN },
-    body: JSON.stringify({inputs: `<|im_start|>user\n${prompts[type]}<|im_end|>\n<|im_start|>assistant\n`})
+    body: JSON.stringify({inputs: `User: ${prompts[type]}\nAI:`, parameters: {max_new_tokens: 200}})
   }).then(r=>r.json()).then(d=>{
-    let reply = d[0]?.generated_text?.split("<|im_start|>assistant\n")[1] || "No response";
+    let reply = d[0]?.generated_text?.replace(`User: ${prompts[type]}\nAI:`, '') || "No response";
     document.getElementById('zambiaResult').innerHTML = `<b style="color:#00f5ff;">RESULT:</b><br>${reply}`;
   });
 }
