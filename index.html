@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christopher's AI Pro - FINAL</title>
+<title>Christopher's AI Pro - FINAL FIX</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
@@ -20,23 +20,18 @@
 .user { background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2)); text-align: right; border-left: 3px solid #00f5ff; }
 .ai { background: rgba(255,255,255,0.05); border-left: 3px solid #ff00ff; }
   input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(0,255,255,0.3); background: rgba(0,0,0,0.4); color: white; margin: 8px 0; }
-.saved-item { background: rgba(0,255,255,0.1); padding: 10px; border-radius: 10px; margin: 5px 0; }
-.section { display: none; }
-.section.active { display: block; }
-.loading { color: #00f5ff; }
 .error { color: #ff0044; }
-.warning { background: rgba(255,255,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 12px; }
+.status { text-align:center; font-size:11px; color:#00ff88; }
+.warning { background: rgba(255,255,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 12px; text-align:center; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🤖 CHRISTOPHER'S AI PRO</h1>
-  <div class="warning">⚠️ Need 200KB/s+ internet. Current: Check top of screen. If under 100KB/s it will be slow.</div>
+  <div class="warning" id="netStatus">Checking internet...</div>
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('chat')">💬 NEURAL CHAT</button>
-    <button class="tab" onclick="showTab('docs')">📁 MY DOCUMENTS</button>
-    <button class="tab" onclick="showTab('zambia')">🇿🇲 ZAMBIA HUB</button>
   </div>
 
   <div id="chat" class="section active">
@@ -46,40 +41,33 @@
     <button class="action-btn" style="background:linear-gradient(135deg,#ff0044,#ff6600)" onclick="clearChat()">🗑️ CLEAR</button>
   </div>
 
-  <div id="docs" class="section">
-    <h3 style="color:#00f5ff;">📁 SAVED DOCUMENTS</h3>
-    <button class="action-btn" onclick="saveCurrentChat()">💾 SAVE CHAT</button>
-    <div id="docsList" style="margin-top:15px;"></div>
-  </div>
-
-  <div id="zambia" class="section">
-    <h3 style="color:#00f5ff;">🇿🇲 ZAMBIA INTELLIGENCE HUB</h3>
-    <button class="action-btn" onclick="zambiaTool('business')">💼 BUSINESS</button>
-    <button class="action-btn" onclick="zambiaTool('farming')">🌽 FARMING</button>
-    <div id="zambiaResult" class="chat-box"></div>
-  </div>
-
 </div>
 
 <script>
 const TOKEN = "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";
-// USE CORS PROXY FOR GITHUB PAGES
-const PROXY = "https://api.allorigins.win/raw?url=";
 const API_URL = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0";
 
+// 2 PROXIES IN CASE 1 FAILS
+const PROXIES = [
+  "https://corsproxy.io/?",
+  "https://api.allorigins.win/raw?url="
+];
+
 let chatHistory = JSON.parse(localStorage.getItem('ai_chat')) || [];
-let documents = JSON.parse(localStorage.getItem('ai_docs')) || [];
 
 window.onload = function() {
   loadChat();
-  loadDocs();
+  checkInternet();
 }
 
-function showTab(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+function checkInternet() {
+  if(navigator.onLine) {
+    document.getElementById('netStatus').innerHTML = "✅ Internet: ON | Speed: Turn on 4G for fast replies";
+    document.getElementById('netStatus').style.color = "#00ff88";
+  } else {
+    document.getElementById('netStatus').innerHTML = "❌ No Internet. Turn on MTN/Airtel Data";
+    document.getElementById('netStatus').style.color = "#ff0044";
+  }
 }
 
 function loadChat() {
@@ -104,31 +92,38 @@ async function sendChat() {
   input.value = '';
   
   const loadingId = Date.now();
-  addMsg(`<span class="loading" id="load${loadingId}">AI is thinking... Wait 10-20s</span>`, 'ai');
+  addMsg(`<span id="load${loadingId}">AI is thinking... 10-20s</span>`, 'ai');
   
-  try {
-    const fullUrl = PROXY + encodeURIComponent(API_URL);
-    const res = await fetch(fullUrl, {
-      method: "POST", 
-      headers: { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" },
-      body: JSON.stringify({inputs: `User: ${msg}\nAI:`, parameters: {max_new_tokens: 150}})
-    });
-    
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    
-    const data = await res.json();
-    let reply = data[0]?.generated_text || "No response from AI";
-    reply = reply.replace(`User: ${msg}\nAI:`, '').trim();
-    if(reply.length < 3) reply = "I got your message! Ask me again.";
-    
-    document.getElementById(`load${loadingId}`).parentElement.innerHTML = `<b>AI:</b> ${reply}`;
-    chatHistory.push({who:'ai', text:reply});
-    saveChat();
-    
-  } catch(e) {
-    document.getElementById(`load${loadingId}`).parentElement.innerHTML = 
-      `<b class="error">AI:</b> Connection failed. <br>1. Check internet is 4G<br>2. Wait 10s and try again<br>Error: ${e.message}`;
+  let reply = "Failed to connect";
+  let success = false;
+  
+  // TRY BOTH PROXIES
+  for(let proxy of PROXIES) {
+    try {
+      const fullUrl = proxy + encodeURIComponent(API_URL);
+      const res = await fetch(fullUrl, {
+        method: "POST", 
+        headers: { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" },
+        body: JSON.stringify({inputs: `User: ${msg}\nAI:`, parameters: {max_new_tokens: 150}})
+      });
+      
+      if(!res.ok) continue;
+      const data = await res.json();
+      reply = data[0]?.generated_text || "No response";
+      reply = reply.replace(`User: ${msg}\nAI:`, '').trim();
+      success = true;
+      break;
+      
+    } catch(e) { console.log("Proxy failed:", e) }
   }
+  
+  if(!success) {
+    reply = `<span class="error">Connection failed.<br><br>FIX:<br>1. Turn on 4G Data - You have 0 K/s<br>2. Try again in 10 seconds<br>3. If still fails, your network is blocking AI</span>`;
+  }
+  
+  document.getElementById(`load${loadingId}`).parentElement.innerHTML = `<b>AI:</b> ${reply}`;
+  chatHistory.push({who:'ai', text:reply});
+  saveChat();
 }
 
 function addMsg(text, who) {
@@ -145,48 +140,11 @@ function clearChat() {
   }
 }
 
-function saveCurrentChat() {
-  const title = prompt("Name this document:");
-  if(!title) return;
-  const content = chatHistory.map(m => `${m.who==='user'?'You':'AI'}: ${m.text}`).join('\n\n');
-  documents.push({type:'chat', title:title, content:content, date:new Date().toLocaleString()});
-  localStorage.setItem('ai_docs', JSON.stringify(documents));
-  loadDocs();
-  alert("Saved!");
-}
-
-function loadDocs() {
-  const list = document.getElementById('docsList');
-  list.innerHTML = '';
-  if(documents.length === 0) {
-    list.innerHTML = '<p style="color:#888;">No saved documents yet</p>';
-    return;
-  }
-  documents.forEach((doc, i) => {
-    list.innerHTML += `
-      <div class="saved-item">
-        <b>${doc.title}</b> <small style="color:#888;">${doc.date}</small><br>
-        <p>${doc.content.substring(0,100)}...</p>
-      </div>
-    `;
-  });
-}
-
-function zambiaTool(type) {
-  const prompts = {
-    business: "5 business ideas in Lusaka Zambia under 2000 ZMW",
-    farming: "Farming tips for maize in Zambia rainy season"
-  };
-  document.getElementById('zambiaResult').innerHTML = '<p class="loading">Loading...</p>';
-  fetch(PROXY + encodeURIComponent(API_URL), {
-    method: "POST", headers: { "Authorization": "Bearer " + TOKEN },
-    body: JSON.stringify({inputs: `User: ${prompts[type]}\nAI:`, parameters: {max_new_tokens: 150}})
-  }).then(r=>r.json()).then(d=>{
-    let reply = d[0]?.generated_text?.replace(`User: ${prompts[type]}\nAI:`, '') || "No response";
-    document.getElementById('zambiaResult').innerHTML = `<b style="color:#00f5ff;">RESULT:</b><br>${reply}`;
-  }).catch(e=>{
-    document.getElementById('zambiaResult').innerHTML = `<span class="error">Error: Check internet</span>`;
-  });
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
 }
 </script>
 </body>
