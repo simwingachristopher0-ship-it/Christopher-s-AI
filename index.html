@@ -3,141 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christopher's AI Pro - With Memory</title>
+<title>Christopher's AI - KNOWS EVERYTHING</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
-  body { background: #0a0a0f; color: white; min-height: 100vh; padding: 10px; }
+  body { background: #0a0a0f; color: white; padding: 10px; }
   body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 100%); z-index: -1; }
-.container { max-width: 900px; margin: 0 auto; background: rgba(15,15,30,0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,255,0.2); border-radius: 20px; padding: 20px; box-shadow: 0 0 30px rgba(0,255,255,0.1); }
-  h1 { text-align: center; margin-bottom: 10px; font-size: 26px; background: linear-gradient(90deg, #00f5ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-.tab { padding: 14px; background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1)); border: 1px solid rgba(0,255,255,0.3); border-radius: 15px; color: #00f5ff; cursor: pointer; font-weight: 700; transition: all 0.3s; }
-.tab:hover { transform: translateY(-3px); box-shadow: 0 0 25px rgba(0,255,255,0.5); }
-.tab.active { background: linear-gradient(135deg, #00f5ff, #ff00ff); color: #0a0a0f; box-shadow: 0 0 30px rgba(0,255,255,0.8); }
-.action-btn { padding: 12px 20px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00f5ff, #ff00ff); color: #0a0a0f; font-weight: 700; cursor: pointer; margin: 5px; transition: all 0.3s; }
-.action-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,0,255,0.6); }
-.action-btn.danger { background: linear-gradient(135deg, #ff0044, #ff6600); }
-.chat-box { height: 350px; overflow-y: auto; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,255,255,0.2); border-radius: 15px; padding: 15px; margin-bottom: 10px; }
-.msg { margin: 10px 0; padding: 12px; border-radius: 12px; animation: fadeIn 0.3s; }
- @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+.container { max-width: 900px; margin: 0 auto; background: rgba(15,15,30,0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,255,0.2); border-radius: 20px; padding: 20px; }
+  h1 { text-align: center; font-size: 24px; background: linear-gradient(90deg, #00f5ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.action-btn { padding: 12px 18px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00f5ff, #ff00ff); color: #0a0a0f; font-weight: 700; cursor: pointer; margin: 5px; }
+.chat-box { height: 400px; overflow-y: auto; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,255,255,0.2); border-radius: 15px; padding: 15px; margin-bottom: 10px; }
+.msg { margin: 10px 0; padding: 12px; border-radius: 12px; }
 .user { background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2)); text-align: right; border-left: 3px solid #00f5ff; }
 .ai { background: rgba(255,255,255,0.05); border-left: 3px solid #ff00ff; }
-  input, textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(0,255,255,0.3); background: rgba(0,0,0,0.4); color: white; margin: 8px 0; outline: none; }
-  input:focus { box-shadow: 0 0 15px rgba(0,255,255,0.5); }
-  img { max-width: 100%; border-radius: 15px; margin-top: 10px; border: 2px solid rgba(0,255,255,0.3); }
-.saved-item { background: rgba(0,255,255,0.1); padding: 10px; border-radius: 10px; margin: 5px 0; border-left: 3px solid #00f5ff; }
-.section { display: none; }
-.section.active { display: block; }
-.loading { color: #00f5ff; animation: pulse 1s infinite; }
- @keyframes pulse { 0%,100% {opacity: 1;} 50% {opacity: 0.5;} }
+  input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(0,255,255,0.3); background: rgba(0,0,0,0.4); color: white; }
+.loading { color: #00f5ff; }
+.source { color: #00f5ff; font-size: 10px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🤖 CHRISTOPHER'S AI PRO</h1>
-  <p style="text-align:center; font-size:12px; color:#00f5ff; margin-bottom:15px;">MEMORY: ON | All data saved to your device</p>
+  <p style="text-align:center; color:#00ff88; font-size:12px;">GROQ + TAVILY SEARCH = KNOWS EVERYTHING</p>
 
-  <div class="tabs">
-    <button class="tab active" onclick="showTab('chat')">💬 NEURAL CHAT</button>
-    <button class="tab" onclick="showTab('talk')">🔊 VOICE AI</button>
-    <button class="tab" onclick="showTab('create')">🎨 AI GENERATOR</button>
-    <button class="tab" onclick="showTab('docs')">📁 MY DOCUMENTS</button>
-    <button class="tab" onclick="showTab('zambia')">🇿🇲 ZAMBIA HUB</button>
-  </div>
-
-  <!-- CHAT -->
-  <div id="chat" class="section active">
-    <div class="chat-box" id="chatBox"></div>
-    <input type="text" id="userInput" placeholder="Ask Christopher's AI anything...">
-    <button class="action-btn" onclick="sendChat()">🚀 SEND</button>
-    <button class="action-btn danger" onclick="clearChat()">🗑️ CLEAR CHAT</button>
-  </div>
-
-  <!-- TALK -->
-  <div id="talk" class="section">
-    <p style="color:#00f5ff;">Click and speak. AI will respond with voice.</p>
-    <button class="action-btn" onclick="startVoice()">🎤 ACTIVATE VOICE</button>
-    <div id="voiceText" style="margin-top:15px;"></div>
-  </div>
-
-  <!-- CREATE IMAGE -->
-  <div id="create" class="section">
-    <input type="text" id="imagePrompt" placeholder="Describe your image: e.g. Futuristic farm in Zambia">
-    <button class="action-btn" onclick="generateImage()">✨ GENERATE & SAVE</button>
-    <div id="imageResult"></div>
-  </div>
-
-  <!-- DOCUMENTS -->
-  <div id="docs" class="section">
-    <h3 style="color:#00f5ff;">📁 SAVED DOCUMENTS & IMAGES</h3>
-    <button class="action-btn" onclick="saveCurrentChat()">💾 SAVE THIS CHAT</button>
-    <button class="action-btn danger" onclick="clearAllDocs()">🗑️ DELETE ALL</button>
-    <div id="docsList" style="margin-top:15px;"></div>
-  </div>
-
-  <!-- ZAMBIA TOOLS -->
-  <div id="zambia" class="section">
-    <h3 style="color:#00f5ff; margin-bottom:10px;">🇿🇲 ZAMBIA INTELLIGENCE HUB</h3>
-    <button class="action-btn" onclick="zambiaTool('business')">💼 BUSINESS IDEAS</button>
-    <button class="action-btn" onclick="zambiaTool('farming')">🌽 FARMING AI</button>
-    <button class="action-btn" onclick="zambiaTool('market')">📈 MARKET PRICES</button>
-    <div id="zambiaResult" class="chat-box"></div>
-  </div>
+  <div class="chat-box" id="chatBox"></div>
+  <input type="text" id="userInput" placeholder="Ask: news, weather, price, anything..." onkeypress="if(event.key==='Enter') sendChat()">
+  <button class="action-btn" onclick="sendChat()">🚀 ASK AI</button>
+  <button class="action-btn" onclick="startVoice()">🎤 TALK</button>
 
 </div>
 
 <script>
-const TOKEN = "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";
-let chatHistory = JSON.parse(localStorage.getItem('ai_chat')) || [];
-let documents = JSON.parse(localStorage.getItem('ai_docs')) || [];
+// YOUR KEYS - REVOKE AFTER TESTING
+const GROQ_API = "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";
+const TAVILY_API = "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";
 
-// LOAD ON START
-window.onload = function() {
-  loadChat();
-  loadDocs();
+let chatHistory = [];
+
+// 1. SEARCH WEB WITH TAVILY
+async function searchWeb(query) {
+  try {
+    const res = await fetch("https://api.tavily.com/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ api_key: TAVILY_API, query: query, search_depth: "advanced", max_results: 3 })
+    });
+    const data = await res.json();
+    if(!data.results) return "";
+    return data.results.map(r => `• ${r.title}: ${r.content}`).join("\n\n");
+  } catch(e) { return ""; }
 }
 
-function showTab(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// CHAT WITH SAVE
-function loadChat() {
-  const box = document.getElementById('chatBox');
-  box.innerHTML = '';
-  chatHistory.forEach(msg => {
-    box.innerHTML += `<div class="msg ${msg.who}"><b>${msg.who==='user'?'YOU':'AI'}:</b> ${msg.text}</div>`;
-  });
-  box.scrollTop = box.scrollHeight;
-}
-
-function saveChat() {
-  localStorage.setItem('ai_chat', JSON.stringify(chatHistory));
-}
-
+// 2. SEND TO GROQ
 async function sendChat() {
   const input = document.getElementById('userInput');
-  const msg = input.value;
-  if(!msg) return;
-  chatHistory.push({who:'user', text:msg});
-  addMsg(msg, 'user');
-  input.value = '';
-  addMsg('<span class="loading">AI is thinking...</span>', 'ai');
-  
-  const res = await fetch("https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct", {
-    method: "POST", headers: { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" },
-    body: JSON.stringify({inputs: msg})
+  const msg = input.value; if(!msg) return;
+  addMsg(msg, 'user'); input.value = '';
+  addMsg('<span class="loading">🧠 Searching web + Thinking...</span>', 'ai');
+
+  let needsSearch = /news|weather|price|today|latest|who won|score|bitcoin|dollar/i.test(msg);
+  let searchResults = "";
+  if(needsSearch) {
+    searchResults = await searchWeb(msg);
+  }
+
+  const finalPrompt = needsSearch
+  ? `Today is April 29, 2026. User in Lusaka, Zambia asked: ${msg}\n\nLatest info from web:\n${searchResults}\n\nAnswer using this info.`
+    : `Today is April 29, 2026. User in Lusaka, Zambia asked: ${msg}`;
+
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + GROQ_API, "Content-Type": "application/json" },
+    body: JSON.stringify({ model: "llama3-70b-8192", messages: [{role: "user", content: finalPrompt}] })
   });
   const data = await res.json();
-  const reply = data[0]?.generated_text || "Error. Try again";
-  chatHistory.pop(); // remove loading
-  chatHistory.push({who:'ai', text:reply});
-  saveChat();
-  loadChat();
+  let reply = data.choices[0].message.content;
+
+  document.getElementById('chatBox').lastChild.remove();
+  addMsg(reply, 'ai');
+  speakText(reply);
 }
 
 function addMsg(text, who) {
@@ -146,89 +90,13 @@ function addMsg(text, who) {
   box.scrollTop = box.scrollHeight;
 }
 
-function clearChat() {
-  if(confirm("Clear current chat?")) {
-    chatHistory = [];
-    saveChat();
-    loadChat();
-  }
-}
-
-// DOCUMENTS SYSTEM
-function saveCurrentChat() {
-  const title = prompt("Name this document:");
-  if(!title) return;
-  const content = chatHistory.map(m => `${m.who==='user'?'You':'AI'}: ${m.text}`).join('\n\n');
-  documents.push({type:'chat', title:title, content:content, date:new Date().toLocaleString()});
-  localStorage.setItem('ai_docs', JSON.stringify(documents));
-  loadDocs();
-  alert("Chat saved!");
-}
-
-function saveImage(title, imgData) {
-  documents.push({type:'image', title:title, content:imgData, date:new Date().toLocaleString()});
-  localStorage.setItem('ai_docs', JSON.stringify(documents));
-  loadDocs();
-}
-
-function loadDocs() {
-  const list = document.getElementById('docsList');
-  list.innerHTML = '';
-  if(documents.length === 0) {
-    list.innerHTML = '<p style="color:#888;">No saved documents yet</p>';
-    return;
-  }
-  documents.forEach((doc, i) => {
-    list.innerHTML += `
-      <div class="saved-item">
-        <b>${doc.title}</b> <small style="color:#888;">${doc.date}</small><br>
-        ${doc.type==='image' ? `<img src="${doc.content}">` : `<p>${doc.content.substring(0,100)}...</p>`}
-        <button class="action-btn" onclick="downloadDoc(${i})">⬇️ DOWNLOAD</button>
-        <button class="action-btn danger" onclick="deleteDoc(${i})">DELETE</button>
-      </div>
-    `;
-  });
-}
-
-function downloadDoc(i) {
-  const doc = documents[i];
-  const blob = new Blob([doc.content], {type: 'text/plain'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = doc.title + '.txt'; a.click();
-}
-
-function deleteDoc(i) {
-  documents.splice(i,1);
-  localStorage.setItem('ai_docs', JSON.stringify(documents));
-  loadDocs();
-}
-
-function clearAllDocs() {
-  if(confirm("Delete ALL saved documents?")) {
-    documents = [];
-    localStorage.setItem('ai_docs', JSON.stringify(documents));
-    loadDocs();
-  }
-}
-
-// VOICE, IMAGE, ZAMBIA - same as before but with save
-function startVoice() { /* same code */ }
-async function generateImage() {
-  const prompt = document.getElementById('imagePrompt').value;
-  document.getElementById('imageResult').innerHTML = '<p class="loading">Generating...</p>';
-  const res = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0", {
-    method: "POST", headers: { "Authorization": "Bearer " + TOKEN },
-    body: JSON.stringify({inputs: prompt})
-  });
-  const blob = await res.blob();
-  const imgUrl = URL.createObjectURL(blob);
-  document.getElementById('imageResult').innerHTML = `<img src="${imgUrl}">`;
-  saveImage(prompt, imgUrl); // AUTO SAVE IMAGE
-}
-function zambiaTool(type) { /* same code */ }
-
-// Shortened for space - copy the voice and zambia functions from previous code
+// VOICE
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition(); recognition.lang = 'en-US';
+const speech = new SpeechSynthesisUtterance(); speech.lang = 'en-US';
+function startVoice() { recognition.start(); }
+recognition.onresult = e => { document.getElementById('userInput').value = e.results[0][0].transcript; sendChat(); }
+function speakText(text) { speech.text = text; window.speechSynthesis.speak(speech); }
 </script>
 </body>
 </html>
