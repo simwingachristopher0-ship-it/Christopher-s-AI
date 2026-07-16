@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Christopher's AI - Groq + Pollinations</title>
+  <title>Christopher's AI</title>
   <style>
     body { font-family: Arial; max-width: 700px; margin: 20px auto; background: #f0f0f0; }
     #chat { background: white; padding: 15px; height: 400px; overflow-y: scroll; border-radius: 10px; }
@@ -20,9 +20,6 @@
   <button onclick="send()">Send</button>
 
   <script>
-    // ⚠️ DELETE THIS KEY AFTER TESTING
-    const GROQ_API_KEY = "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";
-
     const chat = document.getElementById('chat');
     const input = document.getElementById('input');
 
@@ -32,33 +29,25 @@
       input.value = "";
       chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
 
-      // 1. IMAGE GENERATION - Pollinations, no key needed
+      // IMAGE
       if (text.toLowerCase().startsWith("image:")) {
         let prompt = text.substring(6);
         let imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?model=gptimage-large`;
         chat.innerHTML += `<div class="ai"><b>AI:</b> Generating...<br><img src="${imageUrl}"></div>`;
-      }
-
-      // 2. CHAT - Groq API with your key
+      } 
+      // CHAT - Using Pollinations Grok. No key, no CORS issues
       else {
         try {
-          let response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${GROQ_API_KEY}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              "model": "llama-3.1-70b-versatile", // Groq fastest model
-              "messages": [{"role": "user", "content": text}]
-            })
-          });
-
-          let data = await response.json();
-          let aiText = data.choices[0].message.content;
+          chat.innerHTML += `<div class="ai"><b>AI:</b> Thinking...</div>`;
+          let url = `https://text.pollinations.ai/${encodeURIComponent(text)}?model=grok`;
+          let response = await fetch(url);
+          let aiText = await response.text();
+          
+          // remove "Thinking..." and show answer
+          chat.innerHTML = chat.innerHTML.replace('<div class="ai"><b>AI:</b> Thinking...</div>', '');
           chat.innerHTML += `<div class="ai"><b>AI:</b> ${aiText}</div>`;
         } catch(e) {
-          chat.innerHTML += `<div class="ai"><b>Error:</b> ${e}</div>`;
+          chat.innerHTML += `<div class="ai"><b>Error:</b> ${e.message}</div>`;
         }
       }
       chat.scrollTop = chat.scrollHeight;
